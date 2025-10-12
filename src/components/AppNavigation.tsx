@@ -1,9 +1,6 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from './HomeScreen';
-import FormRegister from './FormRegister';
 import FormLogin from './FormLogin';
-import FormPassword from './FormPassword';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,7 +9,6 @@ export default function AppNavigation() {
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown: true}}>
                 <Stack.Screen name="Home" component={FormLogin} />
-                
             </Stack.Navigator>
         </NavigationContainer>
     );

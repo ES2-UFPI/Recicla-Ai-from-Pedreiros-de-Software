@@ -65,7 +65,8 @@ export default function FormLogin({navigation}: any) {
                 <View style={{flexDirection: "row", marginTop: 50}}>
                     <Text style={{fontWeight: "bold", color: '#797070ff'}}>Primeiro acesso?</Text>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('FormRegister')}>
+                        //onPress={() => navigation.navigate('FormRegister')}>
+                        >
                         <Text style={styles.link}>Clique aqui</Text>
                     </TouchableOpacity>
                 </View>

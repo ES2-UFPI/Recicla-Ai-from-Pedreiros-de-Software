@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         marginTop: 5,
         //borderWidth:2,
-        //borderColor: '#8f8f8f3d',
+        //borderColor: '#8f8f8f2d',
     },
     passwordContainer: {
         position: 'relative',

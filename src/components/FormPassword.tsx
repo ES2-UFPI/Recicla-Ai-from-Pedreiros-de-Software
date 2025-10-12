@@ -42,7 +42,7 @@ export default function FormPassword({navigation}: any) {
             <TouchableOpacity 
                 style={styles.button}
                 onPress={() => {
-                    //verificar se as senhas são iguais, dentre outras validações
+                    //verificar se as senhas são iguais, dentre outras validações!
                     handlePress()
                 }}>
                 <Text style={styles.text}>Criar Conta</Text>

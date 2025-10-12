@@ -88,7 +88,7 @@ export default function FormRegister({navigation}: any) {
                             mode="date"
                             display="default"
                             onChange={onChange}
-                            maximumDate={new Date()} // não permite datas futuras
+                            maximumDate={new Date()} // não permite datas futuras!
                             minimumDate={new Date(1900, 0, 1)}
                         />
                     )}

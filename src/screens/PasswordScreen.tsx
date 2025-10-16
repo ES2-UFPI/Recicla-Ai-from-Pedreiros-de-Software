@@ -11,7 +11,7 @@ export default function PasswordScreen({navigation}: any) {
             'Sucesso',
             'Conta criada com sucesso!',
             [
-                { text: 'OK', onPress: () => navigation.navigate('Home') }
+                { text: 'OK', onPress: () => navigation.navigate('Login') }
             ]
         )
     }

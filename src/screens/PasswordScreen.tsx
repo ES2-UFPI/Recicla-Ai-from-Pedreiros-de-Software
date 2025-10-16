@@ -18,7 +18,7 @@ export default function PasswordScreen({navigation}: any) {
     return(
         <View style={styles.container}>
             <Image source={require('../../assets/home_recicla_ai.png')} style={styles.image} />
-            <Text style={styles.title}>Cadastro</Text>
+            <Text style={styles.title}>Senha</Text>
             <InputWrapper
                 label="Senha"
                 value={password}

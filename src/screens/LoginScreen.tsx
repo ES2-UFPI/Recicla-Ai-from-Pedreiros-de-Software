@@ -10,8 +10,9 @@ import {
     Text, 
     Image
 } from "react-native";
+import InputWrapper from "../components/inputWrapper";
 
-export default function FormLogin({navigation}: any) {
+export default function LoginScreen({navigation}: any) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -23,17 +24,14 @@ export default function FormLogin({navigation}: any) {
                     source={require("../../assets/home_recicla_ai.png")}
                     style={styles.image}
                 />
-                <View style={styles.inputWrapper}>
-                    <Text style={styles.label}>Email</Text>
-                    <TextInput 
-                        style={styles.input} 
-                        value={email}
-                        onChangeText={(newText) => setEmail(newText.trim())}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                    />
-                </View>
-
+                <InputWrapper
+                    label="Email"
+                    value={email}
+                    onChangeText={(newText) => setEmail(newText.trim())}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
                 <View style={styles.inputWrapper}>
                     <Text style={styles.label}>Senha</Text>
                     <View style={styles.passwordContainer}>
@@ -65,11 +63,10 @@ export default function FormLogin({navigation}: any) {
                 <View style={{flexDirection: "row", marginTop: 50}}>
                     <Text style={{fontWeight: "bold", color: '#797070ff'}}>Primeiro acesso?</Text>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('FormRegister')}>
+                        onPress={() => navigation.navigate('Register')}>
                         <Text style={styles.link}>Clique aqui</Text>
                     </TouchableOpacity>
                 </View>
-
             </View>
         </TouchableWithoutFeedback>
     );
@@ -83,7 +80,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffff",
     },
     inputWrapper: {
-        width: "90%",
+        width: "80%",
         marginBottom: 15,
     },
     input : {

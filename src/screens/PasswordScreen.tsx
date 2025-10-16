@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
-export default function FormPassword({navigation}: any) {
+import { Image, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
+import InputWrapper from "../components/inputWrapper";
+
+export default function PasswordScreen({navigation}: any) {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     //criar verificação de senha, criar verificação em tempo real para ver se tem o limiar de caracteres necessarios
@@ -17,28 +19,22 @@ export default function FormPassword({navigation}: any) {
         <View style={styles.container}>
             <Image source={require('../../assets/home_recicla_ai.png')} style={styles.image} />
             <Text style={styles.title}>Cadastro</Text>
-            <View style={styles.inputWrapper}>
-                <Text style={styles.label}>Senha</Text>
-                <TextInput
-                    style={styles.input}
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-            </View>
-            <View style={styles.inputWrapper}>
-                <Text style={styles.label}>Confirme a Senha</Text>
-                <TextInput
-                    style={styles.input}
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                    secureTextEntry
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-            </View>
+            <InputWrapper
+                label="Senha"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+            />
+            <InputWrapper
+                label="Confirme a Senha"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+            />
             <TouchableOpacity 
                 style={styles.button}
                 onPress={() => {
@@ -66,24 +62,6 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 30,
         marginBottom: 20
-    },
-    inputWrapper: {
-        width: '80%',
-        marginBottom: 15
-    },
-    label: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: '#797070ff',
-        marginLeft: 20,
-    },
-    input: {
-        height: 50,
-        width: "100%",
-        borderRadius: 50,
-        backgroundColor: "#f6f6f6",
-        paddingLeft: 20,
-        marginTop: 5,
     },
     button: {
         marginTop: 20,

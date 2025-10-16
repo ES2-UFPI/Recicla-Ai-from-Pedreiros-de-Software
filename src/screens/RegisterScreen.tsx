@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, View, Platform, TouchableOpacity, TouchableWithoutFeedback, Keyboard} from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Calendar } from "lucide-react-native";
+import InputWrapper from "../components/inputWrapper";
 
-
-export default function FormRegister({navigation}: any) {
+export default function RegisterScreen({navigation}: any) {
     const [name, setName] = useState('');
     const [cpf, setCpf] = useState('');
     //const [phone, setPhone] = useState('');
@@ -41,36 +41,27 @@ export default function FormRegister({navigation}: any) {
                     style={styles.image} 
                 />
                 <Text style={styles.title}>Cadastro</Text>
-                <View style={styles.inputWrapper}>
-                    <Text style={styles.label}>Nome</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={name}
-                        onChangeText={setName}
-                        autoCorrect={false}
-                    />
-                </View>
-                <View style={styles.inputWrapper}>
-                    <Text style={styles.label}>Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={email}
-                        onChangeText={(newText) => setEmail(newText.trim())}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                    />
-                </View>
-                <View style={styles.inputWrapper}>
-                    <Text style={styles.label}>CPF</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={cpf}
-                        onChangeText={setCpf}
-                        keyboardType="numeric"
-                    />
-                </View>
-                <View style={styles.inputWrapper}>
+                <InputWrapper 
+                    label="Nome"
+                    value={name}
+                    onChangeText={setName}
+                    autoCorrect={false}
+                />
+                <InputWrapper
+                    label="Email"
+                    value={email}
+                    onChangeText={(newText) => setEmail(newText.trim())}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+                <InputWrapper
+                    label="CPF"
+                    value={cpf}
+                    onChangeText={setCpf}
+                    keyboardType="numeric"
+                />
+                 <View style={styles.inputWrapper}>
                     <Text style={styles.label}>Data de Nascimento</Text>
                     <TouchableOpacity 
                         onPress={() => setShowPicker(true)}
@@ -93,11 +84,10 @@ export default function FormRegister({navigation}: any) {
                         />
                     )}
                 </View>
-
                 <TouchableOpacity 
                     style={styles.button}
                     onPress={() => { // Verificar se todos os campos estão preenchidos
-                        navigation.navigate('FormPassword');
+                        navigation.navigate('Password');
                     }}>
                     <Text style={styles.textButton}>Avançar</Text>
                 </TouchableOpacity>
@@ -122,16 +112,6 @@ const styles = StyleSheet.create({
         fontSize: 30,
         marginBottom: 20
     },
-    inputWrapper: {
-        width: '80%',
-        marginBottom: 15
-    },
-    label: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: '#797070ff',
-        marginLeft: 20,
-    },
     input: { 
         height: 50,
         width: "100%",
@@ -141,6 +121,16 @@ const styles = StyleSheet.create({
         marginTop: 5,
         //borderWidth:2,
         //borderColor: '#8f8f8f3d',
+    },
+    inputWrapper: {
+        width: '80%',
+        marginBottom: 15,
+    },
+    label: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#797070ff',
+        marginLeft: 20,
     },
     dateInput: {
         flexDirection: 'row',

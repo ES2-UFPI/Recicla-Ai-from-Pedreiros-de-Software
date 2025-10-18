@@ -57,7 +57,12 @@ export default function LoginScreen({navigation}: any) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.buttonLogin}>
+                <TouchableOpacity 
+                    style={styles.buttonLogin}
+                    onPress={
+                        // Implementar lógica de autenticação aqui
+                        () => navigation.navigate("Home") 
+                    }>
                     <Text style={styles.textButton}>Entrar</Text>
                 </TouchableOpacity>
                 <View style={{flexDirection: "row", marginTop: 50}}>

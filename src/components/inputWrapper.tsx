@@ -1,4 +1,4 @@
-import { TextInput, TextInputProps, View, Text, StyleSheet } from "react-native";
+import { TextInput, View, Text, StyleSheet } from "react-native";
 import { InputWrapperProps} from "../types/inputWrapper";
 
 export default function InputWrapper({label, ...props}: InputWrapperProps) {

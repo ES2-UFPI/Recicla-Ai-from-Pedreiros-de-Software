@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, View, Platform, TouchableOpacity, TouchableWithoutFeedback, Keyboard} from "react-native";
+import { Image, StyleSheet, Text, View, Platform, TouchableOpacity, TouchableWithoutFeedback, Keyboard} from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Calendar } from "lucide-react-native";
 import InputWrapper from "../components/inputWrapper";

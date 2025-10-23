@@ -15,7 +15,7 @@ export default function BottomTabs() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: '#007bff',
+        tabBarActiveTintColor: '#38c99c',
         tabBarInactiveTintColor: '#666',
         tabBarIcon: ({ color, size }) => {
           switch (route.name) {

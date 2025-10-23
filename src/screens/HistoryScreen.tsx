@@ -2,85 +2,84 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
 export default function HistoryScreen() {
-  // 🔹 Lista mockada de coletas/entregas
   const entregas = [
     {
-      id: '001',
-      coletor: 'Carlos Silva',
-      receptor: 'Eco Reciclagem LTDA',
-      destino: 'Rua Verde, 105 - Bairro Jardim',
-      data: '20/10/2025',
-      tipo: 'Plástico',
-      peso: '12,5 kg',
+      id: 101,
+      data: '2025-10-20T14:23:00Z',
       status: 'Entregue',
+      receptor: { nome: 'Maria Oliveira', codigo: 5 },
+      coletor: { nome: 'João Silva', codigo: 3 },
+      pontoColeta: { endereco: 'Rua das Flores, 120', codigo: 12 },
     },
     {
-      id: '002',
-      coletor: 'Mariana Souza',
-      receptor: 'Ponto Verde Recicláveis',
-      destino: 'Av. das Flores, 890 - Centro',
-      data: '19/10/2025',
-      tipo: 'Vidro',
-      peso: '8,3 kg',
-      status: 'Em andamento',
+      id: 102,
+      data: '2025-10-21T10:40:00Z',
+      status: 'Pendente',
+      receptor: { nome: 'Eco Recicla Ltda.', codigo: 8 },
+      coletor: { nome: 'Ana Souza', codigo: 4 },
+      pontoColeta: { endereco: 'Av. Brasil, 450', codigo: 9 },
     },
     {
-      id: '003',
-      coletor: 'Pedro Rocha',
-      receptor: 'Recicla Forte Ltda.',
-      destino: 'Rua Azul, 212 - Santa Luzia',
-      data: '18/10/2025',
-      tipo: 'Metal',
-      peso: '15,7 kg',
+      id: 103,
+      data: '2025-10-19T08:10:00Z',
       status: 'Cancelada',
+      receptor: { nome: 'Carlos Pereira', codigo: 10 },
+      coletor: { nome: 'Bruno Mendes', codigo: 6 },
+      pontoColeta: { endereco: 'Rua das Palmeiras, 30', codigo: 7 },
+    },
+    {
+      id: 104,
+      data: '2025-10-22T16:00:00Z',
+      status: 'Entregue',
+      receptor: { nome: 'Recicla Forte', codigo: 11 },
+      coletor: { nome: 'Fernanda Lima', codigo: 9 },
+      pontoColeta: { endereco: 'Rua Central, 88', codigo: 14 },
     },
   ];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Entregue':
-        return '#4CAF50';
-      case 'Em andamento':
-        return '#FFC107';
-      case 'Cancelada':
-        return '#F44336';
-      default:
-        return '#AAA';
-    }
+  const formatarData = (dataISO: string) => {
+    const data = new Date(dataISO);
+    return data.toLocaleDateString('pt-BR');
   };
 
   return (
     <View style={styles.container}>
-      {/* Cabeçalho */}
       <View style={styles.header}>
         <Text style={styles.title}>Histórico</Text>
+        <Text style={styles.subtitle}>Acompanhe suas coletas e entregas</Text>
       </View>
 
-      {/* Lista de entregas */}
-      <ScrollView contentContainerStyle={styles.listContainer}>
+      <ScrollView contentContainerStyle={styles.scroll}>
         {entregas.map((item) => (
           <View key={item.id} style={styles.card}>
             <View style={styles.cardHeader}>
-              <Text style={styles.cardId}>{item.id}</Text>
-              <Text style={[styles.cardStatus, { color: getStatusColor(item.status) }]}>
+              <Text style={styles.cardTitle}>Entrega #{item.id}</Text>
+              <Text
+                style={[
+                  styles.status,
+                  item.status === 'Entregue'
+                    ? styles.statusOk
+                    : item.status === 'Pendente'
+                    ? styles.statusPending
+                    : item.status === 'Cancelada'
+                    ? styles.statusCanceled
+                    : styles.statusOk,
+                ]}
+              >
                 {item.status}
               </Text>
             </View>
 
-            <Text style={styles.cardLabel}>Coletor:</Text>
-            <Text style={styles.cardValue}>{item.coletor}</Text>
-
-            <Text style={styles.cardLabel}>Receptor:</Text>
-            <Text style={styles.cardValue}>{item.receptor}</Text>
-
-            <Text style={styles.cardLabel}>Destino:</Text>
-            <Text style={styles.cardValue}>{item.destino}</Text>
-
-            <View style={styles.cardFooter}>
-              <Text style={styles.footerText}>Data: {item.data}</Text>
-              <Text style={styles.footerText}>Tipo: {item.tipo}</Text>
-              <Text style={styles.footerText}>Peso: {item.peso}</Text>
-            </View>
+            <Text style={styles.cardText}>Data: {formatarData(item.data)}</Text>
+            <Text style={styles.cardText}>
+              Ponto de coleta: {item.pontoColeta.endereco} (#{item.pontoColeta.codigo})
+            </Text>
+            <Text style={styles.cardText}>
+              Coletor: {item.coletor.nome} (#{item.coletor.codigo})
+            </Text>
+            <Text style={styles.cardText}>
+              Receptor: {item.receptor.nome} (#{item.receptor.codigo})
+            </Text>
           </View>
         ))}
       </ScrollView>
@@ -91,59 +90,68 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0f0f0f',
-    paddingHorizontal: 16,
-    paddingTop: 40,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingTop: 50,
   },
   header: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#000',
   },
-  listContainer: {
+  subtitle: {
+    color: '#555',
+    fontSize: 15,
+    marginTop: 4,
+  },
+  scroll: {
     paddingBottom: 40,
   },
   card: {
-    backgroundColor: '#1e1e1e',
+    backgroundColor: '#f9f9f9',
     borderRadius: 12,
     padding: 16,
     marginBottom: 14,
-    borderColor: '#333',
-    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 8,
   },
-  cardId: {
-    fontWeight: 'bold',
-    color: '#bbb',
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
   },
-  cardStatus: {
-    fontWeight: 'bold',
+  cardText: {
+    color: '#333',
+    fontSize: 14,
+    marginTop: 2,
   },
-  cardLabel: {
-    color: '#888',
-    fontSize: 13,
-    marginTop: 4,
-  },
-  cardValue: {
+  status: {
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    fontWeight: '600',
+    fontSize: 12,
     color: '#fff',
-    fontSize: 15,
-    marginBottom: 2,
   },
-  cardFooter: {
-    marginTop: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  statusOk: {
+    backgroundColor: '#4CAF50',
   },
-  footerText: {
-    color: '#aaa',
-    fontSize: 13,
+  statusPending: {
+    backgroundColor: '#FFB300',
+  },
+  statusCanceled: {
+    backgroundColor: '#E53935',
   },
 });
+
 

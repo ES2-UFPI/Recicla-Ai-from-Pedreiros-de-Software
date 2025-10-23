@@ -1,4 +1,3 @@
-import MapScreen from '@/screens/MapScreen';
 import './global.css';
 import AppNavigation from '@/navigation/AppNavigation';
 

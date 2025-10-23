@@ -14,11 +14,10 @@ export default function HomeScreen({ navigation }: any) {
         
         <TouchableOpacity
           activeOpacity={0.7}
-          disabled={true}
-          className="mt-8 flex-row items-center gap-3 rounded-lg bg-gray-400 px-8 py-4 shadow-lg"
-          // onPress={()=>{
-          //    navigation.navigate("MapScreen")
-          // }}
+          className="mt-8 flex-row items-center gap-3 rounded-lg bg-emerald-600 px-8 py-4 shadow-lg"
+          onPress={() => {
+            navigation.navigate("Map")
+          }}
         >
           <MapPin size={24} color="#ffffff" />
           <Text className="text-lg font-bold text-white">Iniciar uma entrega</Text>

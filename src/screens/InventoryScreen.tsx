@@ -139,13 +139,11 @@ export default function InventoryScreen() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#059669']} />
       }
     >
-      {/* Header */}
       <View className="bg-white p-5 shadow">
         <Text className="text-3xl font-bold text-gray-800">Meu Inventário</Text>
         <Text className="mt-1 text-gray-600">Gerencie seus itens recicláveis</Text>
       </View>
 
-      {/* Tabs */}
       <View className="mx-4 mt-4 flex-row rounded-lg bg-white p-1 shadow">
         <TouchableOpacity
           activeOpacity={0.7}
@@ -182,10 +180,8 @@ export default function InventoryScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Conteúdo baseado na aba ativa */}
       {activeTab === 'items' ? (
         <>
-          {/* Resumo */}
           <View className="mx-4 my-4 rounded-lg bg-white p-4 shadow">
         <Text className="mb-3 text-lg font-bold text-gray-800">Resumo</Text>
         <View className="flex-row justify-between">
@@ -278,7 +274,6 @@ export default function InventoryScreen() {
       </View>
         </>
       ) : (
-        /* Aba de Pacotes - em construção */
         <View className="mx-4 my-4 items-center justify-center rounded-lg bg-white p-10 shadow">
           <Box size={64} color="#9ca3af" />
           <Text className="mt-4 text-center text-lg font-bold text-gray-800">

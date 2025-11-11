@@ -189,5 +189,39 @@ export interface Database {
         };
       };
     };
+    package: {
+      row: {
+        id: number;
+        user_id: number
+        created_at: string;
+        excluded: number | null;
+      };
+      insert: {
+        excluded: number | null;
+      };
+      update: {
+        excluded?: number | null;
+      };
+    }
+    package_items: {
+      row: {
+        id: number,
+        item_id: number,
+        package_id: number,
+        excluded: number,
+        created_at: string
+      }
+      insert: { 
+        item_id: number,
+        package_id: number,
+        excluded: number,
+      }
+      update: {
+        item_id?: number,
+        package_id?: number,
+        excluded?: number,
+      }
+    }
+
   };
 }

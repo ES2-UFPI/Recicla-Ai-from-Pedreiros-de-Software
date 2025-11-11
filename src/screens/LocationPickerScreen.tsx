@@ -28,8 +28,8 @@ export default function LocationPickerScreen() {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const coords = route.params?.coords;
 
-  //const API_KEY = GOOGLE_API_KEY;
-  const API_KEY = '1230918320098a0s9d';
+  const API_KEY = GOOGLE_API_KEY;
+  //const API_KEY = '1230918320098a0s9d';
 
   useEffect(() => {
     if (coords?.latitude && coords?.longitude) {

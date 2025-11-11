@@ -8,6 +8,7 @@ import LocationPickerScreen from '../screens/LocationPickerScreen';
 import MapScreen from '@/screens/MapScreen';
 import CollectionPointMapScreen from '@/screens/CollectionPointMapScreen';
 import CollectionPointsListScreen from '@/screens/CollectionPointsListScreen';
+import SelectPackageScreen from '@/screens/SelectPackageScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,7 @@ export default function AppNavigation() {
         <Stack.Screen name="LocationPicker" component={LocationPickerScreen} />
         <Stack.Screen name="CollectionPointMap" component={CollectionPointMapScreen} />
         <Stack.Screen name="CollectionPointsList" component={CollectionPointsListScreen} />
+        <Stack.Screen name="SelectPackage" component={SelectPackageScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

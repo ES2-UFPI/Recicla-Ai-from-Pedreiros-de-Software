@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { MapPin } from 'lucide-react-native';
 
-const ROLE : string = 'PRODUCER';
+const PROFILE : string = 'PRODUCER';
 
 export default function HomeScreen({ navigation }: any) {
   return (
@@ -14,7 +14,7 @@ export default function HomeScreen({ navigation }: any) {
           Recicla AI - Sistema de reciclagem inteligente
         </Text>
         
-        {ROLE === 'COLLECTOR' && (
+        {PROFILE === 'COLLECTOR' && (
           <TouchableOpacity
             activeOpacity={0.7}
             className="mt-8 flex-row items-center gap-3 rounded-lg bg-emerald-600 px-8 py-4 shadow-lg"
@@ -26,7 +26,7 @@ export default function HomeScreen({ navigation }: any) {
             <Text className="text-lg font-bold text-white">Iniciar uma entrega</Text>
           </TouchableOpacity>
         )}
-        {ROLE === 'PRODUCER' && (
+        {PROFILE === 'PRODUCER' && (
           <TouchableOpacity
             activeOpacity={0.7}
             className="mt-8 flex-row items-center gap-3 rounded-lg bg-emerald-600 px-8 py-4 shadow-lg"

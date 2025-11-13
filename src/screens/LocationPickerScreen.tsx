@@ -9,6 +9,7 @@ import {
   Keyboard,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
+// eslint-disable-next-line import/no-unresolved
 import { GOOGLE_API_KEY } from '@env';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { MapPin, Search } from 'lucide-react-native';

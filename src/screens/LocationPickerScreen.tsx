@@ -9,6 +9,7 @@ import {
   Keyboard,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
+// eslint-disable-next-line import/no-unresolved
 import { GOOGLE_API_KEY } from '@env';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { MapPin, Search } from 'lucide-react-native';
@@ -28,8 +29,8 @@ export default function LocationPickerScreen() {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const coords = route.params?.coords;
 
-  //const API_KEY = GOOGLE_API_KEY;
-  const API_KEY = '1230918320098a0s9d';
+  const API_KEY = GOOGLE_API_KEY;
+  //const API_KEY = '1230918320098a0s9d';
 
   useEffect(() => {
     if (coords?.latitude && coords?.longitude) {

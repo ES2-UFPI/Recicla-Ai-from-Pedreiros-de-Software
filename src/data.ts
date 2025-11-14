@@ -1,7 +1,6 @@
 // dados mockados para testes ou desenvolvimento
 import { InventoryItem } from "@/types/inventoryItem";
 import { PackageComponent } from "./types/packageComponent";
-import { useState } from "react";
 
 export const mockInventory: InventoryItem[] = [
     {

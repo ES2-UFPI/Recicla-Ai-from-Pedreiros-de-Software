@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl} from 'react-native';
-import { Package,Box } from 'lucide-react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Alert } from 'react-native';
+import { Package, Box, Plus } from 'lucide-react-native';
 import Loading from '@/components/loading';
 import { InventoryItem } from '@/types/inventoryItem';
 import { mockInventory, mockPackages } from '@/data';
 import ItensComponent from '@/components/itens';
 import { PackageComponent } from '@/types/packageComponent';
 import PackagesComponent from '@/components/package';
+import { supabase } from '@/lib/supabase';
+import AddItemModal from '@/components/AddItemModal';
 
 type TabType = 'items' | 'packages';
-
-// DADOS MOCKADOS!!!
 
 export default function InventoryScreen() {
   const [activeTab, setActiveTab] = useState<TabType>('items');
@@ -18,8 +18,10 @@ export default function InventoryScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [showAddModal, setShowAddModal] = useState(false);
 
-  //const currentUserId = 1;
+  const currentUserId = 1; // ID do usuário para testes
+  
   useEffect(() => {
     loadInventory();
   }, []);
@@ -27,10 +29,39 @@ export default function InventoryScreen() {
   const loadInventory = async () => {
     try {
       setLoading(true);
+
+      // Carregar itens do inventário com JOIN na tabela item
+      const { data: userItems, error: itemsError } = await supabase
+        .from('user_item')
+        .select(`
+          *,
+          item:item_id (*)
+        `)
+        .eq('user_id', currentUserId)
+        .eq('excluded', 0);
+
+      if (itemsError) {
+        console.error('❌ Erro ao carregar itens:', itemsError);
+        throw itemsError;
+      }
+
+
+
+      // Transformar os dados para o formato InventoryItem
+      const inventoryData: InventoryItem[] = (userItems || []).map(userItem => ({
+        ...userItem,
+        item: userItem.item as any,
+        available_quantity: userItem.quantity,
+      }));
+
+      setInventory(inventoryData);
+      setPackages(mockPackages); // Pacotes ainda mockados
+    } catch (error) {
+      console.error('❌ Erro ao carregar inventário:', error);
+      Alert.alert('Erro', 'Não foi possível carregar o inventário.');
+      // Fallback para dados mockados em caso de erro
       setInventory(mockInventory);
       setPackages(mockPackages);
-    } catch (error) {
-      console.error('Erro ao carregar inventário:', error);
     } finally {
       setLoading(false);
     }
@@ -47,16 +78,17 @@ export default function InventoryScreen() {
   }
 
   return (
-    <ScrollView
-      className="flex-1 bg-gray-50"
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#059669']} />
-      }
-    >
-      <View className="bg-white p-5 shadow">
-        <Text className="text-3xl font-bold text-gray-800">Meu Inventário</Text>
-        <Text className="mt-1 text-gray-600">Gerencie seus itens recicláveis</Text>
-      </View>
+    <View className="flex-1 bg-gray-50">
+      <ScrollView
+        className="flex-1"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#059669']} />
+        }
+      >
+        <View className="bg-white p-5 shadow">
+          <Text className="text-3xl font-bold text-gray-800">Meu Inventário</Text>
+          <Text className="mt-1 text-gray-600">Gerencie seus itens recicláveis</Text>
+        </View>
 
       {/* Abas */}
       <View className="mx-4 mt-4 flex-row rounded-lg bg-white p-1 shadow">
@@ -91,25 +123,51 @@ export default function InventoryScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Conteúdo */}
-      {activeTab === 'items' ? (
-        // === ABA ITENS ===
-        <ItensComponent
-          inventory={inventory} 
-          setInventory={setInventory}
-          setPackages={setPackages}
+        {/* Conteúdo */}
+        {activeTab === 'items' ? (
+          // === ABA ITENS ===
+          <ItensComponent
+            inventory={inventory} 
+            setInventory={setInventory}
+            setPackages={setPackages}
+            >
+          </ItensComponent>
+        ) : (
+          // === ABA PACOTES ===
+          <PackagesComponent
+            inventory={inventory}
+            setInventory={setInventory}
+            packages={packages}
+            setPackages={setPackages}
           >
-        </ItensComponent>
-      ) : (
-        // === ABA PACOTES ===
-        <PackagesComponent
-          inventory={inventory}
-          setInventory={setInventory}
-          packages={packages}
-          setPackages={setPackages}
+          </PackagesComponent>
+        )}
+      </ScrollView>
+
+      {/* Botão Flutuante - Adicionar Item (fixo no fundo da tela) */}
+      {activeTab === 'items' && (
+        <TouchableOpacity
+          onPress={() => setShowAddModal(true)}
+          className="absolute bottom-6 right-6 h-16 w-16 items-center justify-center rounded-full bg-emerald-600 shadow-lg"
+          style={{
+            elevation: 8,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 4.65,
+          }}
         >
-        </PackagesComponent>
+          <Plus size={32} color="#ffffff" />
+        </TouchableOpacity>
       )}
-    </ScrollView>
+
+      {/* Modal para adicionar item */}
+      <AddItemModal
+        visible={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onItemAdded={() => loadInventory()}
+        userId={currentUserId}
+      />
+    </View>
   );
 }

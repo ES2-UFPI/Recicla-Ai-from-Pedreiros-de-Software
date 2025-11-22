@@ -1,9 +1,10 @@
 import { Minus, Package, Plus, Trash2 } from "lucide-react-native";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import React, {useState } from "react";
 import { InventoryItem } from "@/types/inventoryItem";
 import { PackageComponent } from "@/types/packageComponent";
 import { InventoryItemComponent } from "@/types/inventoryItemComponent";
+import { supabase } from "@/lib/supabase";
 
 type ItensComponentProps = {
   inventory: InventoryItem[];
@@ -25,43 +26,85 @@ export default function ItensComponent({inventory, setInventory, setPackages}: I
   };
 
   const calculateTotalWeight = () => {
-    return inventory.reduce((sum, item) => sum + item.total_weight, 0);
+    return inventory.reduce((sum, item) => sum + (item.quantity * item.item.weight), 0);
   };
 
   const removeItem = async (itemId: number) => {
-    setInventory(prev => prev.filter(item => item.id !== itemId));
-    setPackages(prev =>
-      prev
-        .map(pkg => {
-          pkg.setChildren(pkg.getChildren().filter(child => {
-            if (child instanceof InventoryItemComponent) {
-              return child.item.id !== itemId;
-            }
-            return true;
-          }));
-          return pkg;
-        })
-        .filter(pkg => pkg.getChildren().length > 0)
-    );
+    try {
+      
+      // Soft delete no Supabase
+      const { error } = await supabase
+        .from('user_item')
+        .update({ excluded: 1 })
+        .eq('id', itemId);
+
+      if (error) {
+        console.error('❌ Erro ao remover item:', error);
+        Alert.alert('Erro', 'Não foi possível remover o item.');
+        return;
+      }
+
+      
+      // Atualizar estado local
+      setInventory(prev => prev.filter(item => item.id !== itemId));
+      setPackages(prev =>
+        prev
+          .map(pkg => {
+            pkg.setChildren(pkg.getChildren().filter(child => {
+              if (child instanceof InventoryItemComponent) {
+                return child.item.id !== itemId;
+              }
+              return true;
+            }));
+            return pkg;
+          })
+          .filter(pkg => pkg.getChildren().length > 0)
+      );
+    } catch (error) {
+      console.error('❌ Erro ao remover item:', error);
+      Alert.alert('Erro', 'Não foi possível remover o item.');
+    }
   };
   
   const updateQuantity = async (itemId: number, change: number) => {
-    setInventory(prev =>
-      prev.map(item => {
-        if (item.id === itemId) {
-          const newQuantity = Math.max(0, item.quantity + change);
-          const newAvailable = Math.max(0, (item.available_quantity ?? item.quantity) + change);
-          const newTotalWeight = newQuantity * item.item.weight;
-          return {
-            ...item,
-            quantity: newQuantity,
-            available_quantity: newAvailable,
-            total_weight: newTotalWeight,
-          };
-        }
-        return item;
-      })
-    );
+    try {
+      const currentItem = inventory.find(item => item.id === itemId);
+      if (!currentItem) return;
+
+      const newQuantity = Math.max(0, currentItem.quantity + change);
+      
+
+      // Atualizar no Supabase
+      const { error } = await supabase
+        .from('user_item')
+        .update({ quantity: newQuantity })
+        .eq('id', itemId);
+
+      if (error) {
+        console.error('❌ Erro ao atualizar quantidade:', error);
+        Alert.alert('Erro', 'Não foi possível atualizar a quantidade.');
+        return;
+      }
+
+
+      // Atualizar estado local
+      setInventory(prev =>
+        prev.map(item => {
+          if (item.id === itemId) {
+            const newAvailable = Math.max(0, (item.available_quantity ?? item.quantity) + change);
+            return {
+              ...item,
+              quantity: newQuantity,
+              available_quantity: newAvailable,
+            };
+          }
+          return item;
+        })
+      );
+    } catch (error) {
+      console.error('❌ Erro ao atualizar quantidade:', error);
+      Alert.alert('Erro', 'Não foi possível atualizar a quantidade.');
+    }
   };
 
   return (
@@ -100,7 +143,7 @@ export default function ItensComponent({inventory, setInventory, setPackages}: I
             <View key={item.id} className="mb-3 rounded-lg bg-white p-4 shadow">
               <View className="mb-3 flex-row items-center justify-between">
                 <View className="flex-1">
-                  <Text className="text-lg font-bold text-gray-800">{item.item.nome}</Text>
+                  <Text className="text-lg font-bold text-gray-800">{item.item.name}</Text>
                   <Text className="text-sm text-gray-500">
                     Peso unitário: {item.item.weight} kg | Valor unitário: R$ {item.item.value.toFixed(2)}
                   </Text>

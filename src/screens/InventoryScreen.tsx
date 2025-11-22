@@ -20,7 +20,7 @@ export default function InventoryScreen() {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const currentUserId = 1; // ID do usuário para testes
+  const currentUserId = 1; 
   
   useEffect(() => {
     loadInventory();
@@ -30,7 +30,7 @@ export default function InventoryScreen() {
     try {
       setLoading(true);
 
-      // Carregar itens do inventário com JOIN na tabela item
+      
       const { data: userItems, error: itemsError } = await supabase
         .from('user_item')
         .select(`
@@ -41,13 +41,13 @@ export default function InventoryScreen() {
         .eq('excluded', 0);
 
       if (itemsError) {
-        console.error('❌ Erro ao carregar itens:', itemsError);
+        console.error(' Erro ao carregar itens:', itemsError);
         throw itemsError;
       }
 
 
 
-      // Transformar os dados para o formato InventoryItem
+      
       const inventoryData: InventoryItem[] = (userItems || []).map(userItem => ({
         ...userItem,
         item: userItem.item as any,
@@ -55,11 +55,11 @@ export default function InventoryScreen() {
       }));
 
       setInventory(inventoryData);
-      setPackages(mockPackages); // Pacotes ainda mockados
+      setPackages(mockPackages); 
     } catch (error) {
-      console.error('❌ Erro ao carregar inventário:', error);
+      console.error(' Erro ao carregar inventário:', error);
       Alert.alert('Erro', 'Não foi possível carregar o inventário.');
-      // Fallback para dados mockados em caso de erro
+      
       setInventory(mockInventory);
       setPackages(mockPackages);
     } finally {
@@ -90,7 +90,6 @@ export default function InventoryScreen() {
           <Text className="mt-1 text-gray-600">Gerencie seus itens recicláveis</Text>
         </View>
 
-      {/* Abas */}
       <View className="mx-4 mt-4 flex-row rounded-lg bg-white p-1 shadow">
         <TouchableOpacity
           activeOpacity={0.7}
@@ -123,9 +122,8 @@ export default function InventoryScreen() {
         </TouchableOpacity>
       </View>
 
-        {/* Conteúdo */}
         {activeTab === 'items' ? (
-          // === ABA ITENS ===
+          
           <ItensComponent
             inventory={inventory} 
             setInventory={setInventory}
@@ -133,7 +131,7 @@ export default function InventoryScreen() {
             >
           </ItensComponent>
         ) : (
-          // === ABA PACOTES ===
+          
           <PackagesComponent
             inventory={inventory}
             setInventory={setInventory}
@@ -144,7 +142,6 @@ export default function InventoryScreen() {
         )}
       </ScrollView>
 
-      {/* Botão Flutuante - Adicionar Item (fixo no fundo da tela) */}
       {activeTab === 'items' && (
         <TouchableOpacity
           onPress={() => setShowAddModal(true)}
@@ -161,7 +158,6 @@ export default function InventoryScreen() {
         </TouchableOpacity>
       )}
 
-      {/* Modal para adicionar item */}
       <AddItemModal
         visible={showAddModal}
         onClose={() => setShowAddModal(false)}

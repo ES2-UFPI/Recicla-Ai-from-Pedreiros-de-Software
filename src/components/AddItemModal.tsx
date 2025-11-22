@@ -51,18 +51,18 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
     try {
       setLoading(true);
 
-      // Buscar todos os itens ativos
+      
       const { data: allItems, error: itemsError } = await supabase
         .from('item')
         .select('*')
         .eq('excluded', 0);
 
       if (itemsError) {
-        console.error('❌ Erro ao carregar itens:', itemsError);
+        console.error(' Erro ao carregar itens:', itemsError);
         throw itemsError;
       }
 
-      // Buscar itens que o usuário já tem
+      
       const { data: userItems, error: userItemsError } = await supabase
         .from('user_item')
         .select('item_id')
@@ -70,11 +70,11 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
         .eq('excluded', 0);
 
       if (userItemsError) {
-        console.error('❌ Erro ao carregar itens do usuário:', userItemsError);
+        console.error(' Erro ao carregar itens do usuário:', userItemsError);
         throw userItemsError;
       }
 
-      // Filtrar apenas itens que o usuário NÃO possui
+      
       const userItemIds = userItems?.map(ui => ui.item_id) || [];
       const availableItems = allItems?.filter(item => !userItemIds.includes(item.id)) || [];
 
@@ -82,7 +82,7 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
       setItems(availableItems);
       setFilteredItems(availableItems);
     } catch (error) {
-      console.error('❌ Erro ao carregar itens:', error);
+      console.error(' Erro ao carregar itens:', error);
       Alert.alert('Erro', 'Não foi possível carregar os itens disponíveis');
     } finally {
       setLoading(false);
@@ -103,7 +103,7 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
     try {
       setLoading(true);
 
-      // Criar novo registro (não precisa verificar pois já filtramos antes)
+      
       const { error: insertError } = await supabase
         .from('user_item')
         .insert({
@@ -114,7 +114,7 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
         });
 
       if (insertError) {
-        console.error('❌ Erro ao inserir:', insertError);
+        console.error(' Erro ao inserir:', insertError);
         throw insertError;
       }
 
@@ -122,7 +122,7 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
       onItemAdded();
       handleClose();
     } catch (error) {
-      console.error('❌ Erro ao adicionar item:', error);
+      console.error(' Erro ao adicionar item:', error);
       Alert.alert('Erro', 'Não foi possível adicionar o item ao inventário');
     } finally {
       setLoading(false);
@@ -149,7 +149,6 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
     >
       <View className="flex-1 bg-black/50">
         <View className="mt-20 flex-1 rounded-t-3xl bg-white">
-          {/* Header */}
           <View className="flex-row items-center justify-between border-b border-gray-200 p-5">
             <View>
               <Text className="text-2xl font-bold text-gray-800">Adicionar Item</Text>
@@ -166,7 +165,6 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
             </TouchableOpacity>
           </View>
 
-          {/* Search Bar */}
           <View className="border-b border-gray-100 px-5 py-3">
             <View className="flex-row items-center rounded-lg bg-gray-100 px-4 py-3">
               <Search size={20} color="#6b7280" />
@@ -180,7 +178,6 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
             </View>
           </View>
 
-          {/* Loading State */}
           {loading ? (
             <View className="flex-1 items-center justify-center">
               <ActivityIndicator size="large" color="#059669" />
@@ -188,7 +185,6 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
             </View>
           ) : (
             <>
-              {/* Items List */}
               <FlatList
                 data={filteredItems}
                 keyExtractor={item => item.id.toString()}
@@ -214,10 +210,10 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
                         </Text>
                         <View className="mt-2 flex-row gap-4">
                           <Text className="text-sm text-gray-600">
-                            💰 R$ {item.value.toFixed(2)}
+                             R$ {item.value.toFixed(2)}
                           </Text>
                           <Text className="text-sm text-gray-600">
-                            ⚖️ {item.weight} kg
+                             {item.weight} kg
                           </Text>
                         </View>
                       </View>
@@ -243,7 +239,6 @@ export default function AddItemModal({ visible, onClose, onItemAdded, userId }: 
                 }
               />
 
-              {/* Bottom Action - Quantity and Add Button */}
               {selectedItem && (
                 <View className="border-t border-gray-200 bg-white p-5">
                   <View className="mb-3 flex-row items-center justify-between">

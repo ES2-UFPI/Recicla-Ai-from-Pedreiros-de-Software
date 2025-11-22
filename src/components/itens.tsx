@@ -32,20 +32,20 @@ export default function ItensComponent({inventory, setInventory, setPackages}: I
   const removeItem = async (itemId: number) => {
     try {
       
-      // Soft delete no Supabase
+      
       const { error } = await supabase
         .from('user_item')
         .update({ excluded: 1 })
         .eq('id', itemId);
 
       if (error) {
-        console.error('❌ Erro ao remover item:', error);
+        console.error(' Erro ao remover item:', error);
         Alert.alert('Erro', 'Não foi possível remover o item.');
         return;
       }
 
       
-      // Atualizar estado local
+      
       setInventory(prev => prev.filter(item => item.id !== itemId));
       setPackages(prev =>
         prev
@@ -61,7 +61,7 @@ export default function ItensComponent({inventory, setInventory, setPackages}: I
           .filter(pkg => pkg.getChildren().length > 0)
       );
     } catch (error) {
-      console.error('❌ Erro ao remover item:', error);
+      console.error(' Erro ao remover item:', error);
       Alert.alert('Erro', 'Não foi possível remover o item.');
     }
   };
@@ -74,20 +74,20 @@ export default function ItensComponent({inventory, setInventory, setPackages}: I
       const newQuantity = Math.max(0, currentItem.quantity + change);
       
 
-      // Atualizar no Supabase
+      
       const { error } = await supabase
         .from('user_item')
         .update({ quantity: newQuantity })
         .eq('id', itemId);
 
       if (error) {
-        console.error('❌ Erro ao atualizar quantidade:', error);
+        console.error(' Erro ao atualizar quantidade:', error);
         Alert.alert('Erro', 'Não foi possível atualizar a quantidade.');
         return;
       }
 
 
-      // Atualizar estado local
+      
       setInventory(prev =>
         prev.map(item => {
           if (item.id === itemId) {
@@ -102,14 +102,13 @@ export default function ItensComponent({inventory, setInventory, setPackages}: I
         })
       );
     } catch (error) {
-      console.error('❌ Erro ao atualizar quantidade:', error);
+      console.error(' Erro ao atualizar quantidade:', error);
       Alert.alert('Erro', 'Não foi possível atualizar a quantidade.');
     }
   };
 
   return (
     <>
-      {/* === ABA ITENS === */}
       <View className="mx-4 my-4 rounded-lg bg-white p-4 shadow">
         <Text className="mb-3 text-lg font-bold text-gray-800">Resumo</Text>
         <View className="flex-row justify-between">

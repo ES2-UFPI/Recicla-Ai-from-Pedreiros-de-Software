@@ -1,4 +1,8 @@
 // Revisar as regras do update depois de pensar sobre as regras de negocio melhor
+//request_item: {
+  //package_id: number,
+// request : {
+  //package_id: number,
 
 export interface Database {
   public: {

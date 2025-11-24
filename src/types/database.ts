@@ -101,20 +101,20 @@ export interface Database {
       item: {
         row: {
           id: number;
-          nome: string;
+          name: string;
           value: number;
           weight: number;
           excluded: number | null;
           created_at: string;
         };
         insert: {
-          nome: string;
+          name: string;
           value: number;
           weight: number;
           excluded: number | null;
         };
         update: {
-          nome?: string;
+          name?: string;
           value?: number;
           weight?: number;
           excluded?: number | null;
@@ -169,7 +169,6 @@ export interface Database {
           user_id: number;
           item_id: number;
           quantity: number;
-          total_weight: number;
           created_at: string;
           excluded: number | null;
         };
@@ -177,14 +176,12 @@ export interface Database {
           user_id: number;
           item_id: number;
           quantity: number;
-          total_weight: number;
           excluded: number | null;
         };
         update: {
           user_id?: number;
           item_id?: number;
           quantity?: number;
-          total_weight?: number;
           excluded?: number | null;
         };
       };

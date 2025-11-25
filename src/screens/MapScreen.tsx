@@ -5,12 +5,13 @@ import * as Location from 'expo-location';
 import { useEffect, useState } from "react";
 import Dashboard from "@/components/dashboard";
 import MapView from "react-native-maps";
-
-
+import { useRoute, RouteProp} from "@react-navigation/native";
 export default function MapScreen() {
+    const route = useRoute<RouteProp<any, any>>();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [region, setRegion] = useState<Region | null>(null);
     const [coords, setCoords] = useState<Location.LocationObjectCoords | null>(null);
+    const idPackage = route.params?.idPackage;
 
     useEffect(() => {
         (async () => {
@@ -53,7 +54,7 @@ export default function MapScreen() {
                     //<Marker coordinate={region} title="Você está aqui" />
                 }
             </MapView>
-            <Dashboard coords={coords} />
+            <Dashboard coords={coords} idPackage={idPackage} />
         </View>
 
     );

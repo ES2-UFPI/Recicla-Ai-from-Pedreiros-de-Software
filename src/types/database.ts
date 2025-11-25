@@ -1,4 +1,8 @@
 // Revisar as regras do update depois de pensar sobre as regras de negocio melhor
+//request_item: {
+//package_id: number,
+// request : {
+//package_id: number,
 
 export interface Database {
   public: {
@@ -101,20 +105,20 @@ export interface Database {
       item: {
         row: {
           id: number;
-          nome: string;
+          name: string;
           value: number;
           weight: number;
           excluded: number | null;
           created_at: string;
         };
         insert: {
-          nome: string;
+          name: string;
           value: number;
           weight: number;
           excluded: number | null;
         };
         update: {
-          nome?: string;
+          name?: string;
           value?: number;
           weight?: number;
           excluded?: number | null;
@@ -169,7 +173,6 @@ export interface Database {
           user_id: number;
           item_id: number;
           quantity: number;
-          total_weight: number;
           created_at: string;
           excluded: number | null;
         };
@@ -177,17 +180,76 @@ export interface Database {
           user_id: number;
           item_id: number;
           quantity: number;
-          total_weight: number;
           excluded: number | null;
         };
         update: {
           user_id?: number;
           item_id?: number;
           quantity?: number;
-          total_weight?: number;
           excluded?: number | null;
         };
       };
     };
+    package: {
+      row: {
+        id: number;
+        user_id: number
+        created_at: string;
+        excluded: number | null;
+      };
+      insert: {
+        user_id: number;
+        excluded: number | null;
+      };
+      update: {
+        excluded?: number | null;
+      };
+    };
+    package_items: {
+      row: {
+        id: number,
+        item_id: number,
+        package_id: number,
+        excluded: number,
+        created_at: string
+        item_quantity: number,
+      }
+      insert: {
+        item_id: number,
+        package_id: number,
+        excluded: number,
+        item_quantity: number,
+      }
+      update: {
+        item_id?: number,
+        item_quantity?: number,
+        package_id?: number,
+        excluded?: number,
+      }
+    };
+    offers: {
+      row: {
+        id: number;
+        user_id: number;
+        package_id: number;
+        status: 'accepted' | 'pending';
+        created_at: string;
+        excluded: number | null;
+        address_collection_point: string | null;
+      };
+      insert: {
+        user_id: number;
+        package_id: number;
+        status: 'accepted' | 'pending';
+        excluded: number | null;
+        address_collection_point: string | null;
+      };
+      update: {
+        status?: 'accepted' | 'pending';
+        excluded?: number | null;
+        address_collection_point?: string | null;
+      };
+    }
+
   };
 }

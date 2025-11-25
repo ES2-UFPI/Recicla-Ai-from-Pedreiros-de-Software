@@ -1,41 +1,24 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { addHistory, getUserRole, mockHistory } from '@/data';
+import { Offer } from '@/types/offer';
+import { CollectionPoint } from '@/types/collectionPoint';
+import { History } from '@/types/history';
 
-export default function HistoryScreen() {
-  const entregas = [
-    {
-      id: 101,
-      data: '2025-10-20T14:23:00Z',
-      status: 'Entregue',
-      receptor: { nome: 'Maria Oliveira', codigo: 5 },
-      coletor: { nome: 'João Silva', codigo: 3 },
-      pontoColeta: { endereco: 'Rua das Flores, 120', codigo: 12 },
-    },
-    {
-      id: 102,
-      data: '2025-10-21T10:40:00Z',
-      status: 'Pendente',
-      receptor: { nome: 'Eco Recicla Ltda.', codigo: 8 },
-      coletor: { nome: 'Ana Souza', codigo: 4 },
-      pontoColeta: { endereco: 'Av. Brasil, 450', codigo: 9 },
-    },
-    {
-      id: 103,
-      data: '2025-10-19T08:10:00Z',
-      status: 'Cancelada',
-      receptor: { nome: 'Carlos Pereira', codigo: 10 },
-      coletor: { nome: 'Bruno Mendes', codigo: 6 },
-      pontoColeta: { endereco: 'Rua das Palmeiras, 30', codigo: 7 },
-    },
-    {
-      id: 104,
-      data: '2025-10-22T16:00:00Z',
-      status: 'Entregue',
-      receptor: { nome: 'Recicla Forte', codigo: 11 },
-      coletor: { nome: 'Fernanda Lima', codigo: 9 },
-      pontoColeta: { endereco: 'Rua Central, 88', codigo: 14 },
-    },
-  ];
+export default function HistoryScreen({route}: any) {
+  const collectionPoint: CollectionPoint = route.params?.collectionPoint as CollectionPoint;
+  const PROFILE = getUserRole();
+  if (collectionPoint){
+    addHistory(
+      {
+        id: 101,
+        date: new Date().toISOString(),
+        receiver: null,
+        collector: null,
+        producer: "Rodolfo",
+        collectionPoint: collectionPoint.address
+      } as History);
+    }
 
   const formatarData = (dataISO: string) => {
     const data = new Date(dataISO);
@@ -46,11 +29,11 @@ export default function HistoryScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Histórico</Text>
-        <Text style={styles.subtitle}>Acompanhe suas coletas e entregas</Text>
+        <Text style={styles.subtitle}>{PROFILE === 'PRODUCER' ? 'Acompanhe suas coletas' : 'Acompanhe suas entregas'}</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll}>
-        {entregas.map((item) => (
+        {mockHistory.map((item) => (
           <View key={item.id} style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle}>Entrega #{item.id}</Text>
@@ -70,15 +53,18 @@ export default function HistoryScreen() {
               </Text>
             </View>
 
-            <Text style={styles.cardText}>Data: {formatarData(item.data)}</Text>
+            <Text style={styles.cardText}>Data: {formatarData(item.date)}</Text>
             <Text style={styles.cardText}>
-              Ponto de coleta: {item.pontoColeta.endereco} (#{item.pontoColeta.codigo})
+              Ponto de coleta: {item.collectionPoint}
             </Text>
             <Text style={styles.cardText}>
-              Coletor: {item.coletor.nome} (#{item.coletor.codigo})
+              Produtor: {item.producer}
             </Text>
             <Text style={styles.cardText}>
-              Receptor: {item.receptor.nome} (#{item.receptor.codigo})
+              Coletor: {item.collector || 'Aguardando designação'}
+            </Text>
+            <Text style={styles.cardText}>
+              Recebedor: {item.receiver || 'Aguardando designação'}
             </Text>
           </View>
         ))}

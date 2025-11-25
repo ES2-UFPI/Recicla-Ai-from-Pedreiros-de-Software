@@ -8,7 +8,8 @@ import {
     TouchableOpacity,
     View, 
     Text, 
-    Image
+    Image,
+    Alert
 } from "react-native";
 import InputWrapper from "../components/inputWrapper";
 
@@ -47,7 +48,7 @@ export default function LoginScreen({navigation}: any) {
                             style={styles.eyeIcon}
                             onPress={() => setShowPassword(!showPassword)}
                         >
-                            {password != '' ?(
+                            {password !== '' ?(
                                 showPassword ? (
                                     <Eye size={20} color="#666" />
                                 ) : (
@@ -61,7 +62,13 @@ export default function LoginScreen({navigation}: any) {
                     style={styles.buttonLogin}
                     onPress={
                         // Implementar lógica de autenticação aqui
-                        () => navigation.navigate("Home") 
+                        () => {
+                            if ( email === '') {
+                                Alert.alert('Por favor, insira um email válido.');
+                                return;
+                            }
+                            else navigation.navigate('Home');
+                        } 
                     }>
                     <Text style={styles.textButton}>Entrar</Text>
                 </TouchableOpacity>

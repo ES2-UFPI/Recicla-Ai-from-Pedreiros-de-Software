@@ -1,11 +1,13 @@
-import { Minus, Plus, Trash2, Box, ArrowRight } from "lucide-react-native";
+import { Minus, Plus, Trash2, Box, ArrowRight, Package } from "lucide-react-native";
 import { useState } from "react";
 import { View, Text, TouchableOpacity, Alert, StyleSheet, Pressable} from "react-native";
 import { InventoryItem } from "@/types/inventoryItem";
 import { PackageComponent } from "@/types/packageComponent";
 import { InventoryItemComponent } from "@/types/inventoryItemComponent";
 import { useNavigation } from "@react-navigation/native";
-import { addOffer, mockOffers } from "@/data";
+import { addOffer} from "@/data";
+import { PackageService } from "@/services/package-service";
+import { OfferService } from "@/services/offer-service";
 
 type PackagesComponentProps = {
   inventory: InventoryItem[];
@@ -33,9 +35,12 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
     });
   };
 
-  const createPackage = () => {
+  const createPackage = async () => {
     if (selectedItems.length === 0) return;
-
+    const packageService = new PackageService();
+    const currentDate = new Date().toISOString();
+    const data = await packageService.createPackage(1, currentDate);
+    console.log(data);
     const packageName = `Pacote #${packages.length + 1}`;
     const newPackage = new PackageComponent(packageName);
     let hasError = false;
@@ -53,9 +58,11 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
         const partialItem: InventoryItem = {
           ...item,
           quantity: chosenQty,
-          total_weight: chosenQty * item.item.weight,
         };
         newPackage.add(new InventoryItemComponent(partialItem));
+        newPackage.setId(data["id"]);
+        console.log(data["id"]);
+        packageService.createPackageItem(1, item.id, 6, currentDate, chosenQty);
 
         return {
           ...item,
@@ -75,7 +82,7 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
     setSelectedItems([]);
     setSelectedQuantities({});
     addOffer({
-      creator: "Usuário Atual",
+      creator: "Rodolfo",
       date: new Date(),
       status: 'pending',
       package: newPackage,
@@ -127,7 +134,7 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
                 onPress={() => toggleSelectItem(item.id)}
                 className="flex-row justify-between items-center mb-2"
               >
-                <Text className="text-gray-800 font-medium">{item.item.nome}</Text>
+                <Text className="text-gray-800 font-medium">{item.item.name}</Text>
                 <Text className="text-gray-500 text-sm">{available} un disponíveis</Text>
               </TouchableOpacity>
 
@@ -185,7 +192,6 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
               </TouchableOpacity>
             </View>
             <Text className="text-gray-600 mb-2">
-              Peso Total: <Text className="font-semibold">{pkg.getWeight().toFixed(2)} kg</Text> | Valor Estimado:{' '}
               <Text className="font-semibold">R$ {pkg.getValue().toFixed(2)}</Text>
             </Text>
             {pkg.getChildren().map((child, idx) => {
@@ -199,7 +205,7 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
               return null;
             })}
             {selectedPackage === pkg.getName() && (
-              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Map")}>
+              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Map", {idPackage: pkg.getId()})}>
                 <ArrowRight size={22} color="#22c55e" />
               </TouchableOpacity>
             )}

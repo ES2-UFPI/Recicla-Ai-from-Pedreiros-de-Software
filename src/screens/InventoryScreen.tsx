@@ -7,8 +7,9 @@ import { mockInventory, mockPackages } from '@/data';
 import ItensComponent from '@/components/itens';
 import { PackageComponent } from '@/types/packageComponent';
 import PackagesComponent from '@/components/package';
-import { supabase } from '@/lib/supabase';
 import AddItemModal from '@/components/AddItemModal';
+import { getUserItems } from '@/services/item-service';
+import { PackageService } from '@/services/package-service';
 
 type TabType = 'items' | 'packages';
 
@@ -29,30 +30,26 @@ export default function InventoryScreen() {
   const loadInventory = async () => {
     try {
       setLoading(true);
-
-      
-      const { data: userItems, error: itemsError } = await supabase
-        .from('user_item')
-        .select(`
-          *,
-          item:item_id (*)
-        `)
-        .eq('user_id', currentUserId)
-        .eq('excluded', 0);
-
+      const packageService = new PackageService();
+      const { data: userItems, error: itemsError } = await getUserItems(currentUserId);
+      const { data: userPackagesItems, error: packagesError } = await packageService.getUserPackagesItems(currentUserId);
+      console.log(userPackagesItems);
+      //console.log(userItems);
       if (itemsError) {
         console.error(' Erro ao carregar itens:', itemsError);
         throw itemsError;
       }
-
-
-
+     // if (packagesError) {
+       // console.error(' Erro ao carregar pacotes:', packagesError);
+        //throw packagesError;
+      //}
       
       const inventoryData: InventoryItem[] = (userItems || []).map(userItem => ({
         ...userItem,
         item: userItem.item as any,
         available_quantity: userItem.quantity,
       }));
+
 
       setInventory(inventoryData);
       setPackages(mockPackages); 

@@ -9,11 +9,14 @@ import { Coordinate } from "@/types/coordinate";
 import { CollectionPoint } from "@/types/collectionPoint";
 import Card from "@/components/card";
 import { mockOffers, mockPoints } from "@/data";
+import { OfferService } from "@/services/offer-service";
+import { PackageComponent } from "@/types/packageComponent";
 
 type RootStackParamList = {
   Map: {
     newCollectionPoint?: CollectionPoint;
     origin?: Coordinate | null;
+    idPackage: number;
   };
   LocationPicker: {
     coords: {
@@ -36,7 +39,7 @@ export default function CollectionPointMapScreen() {
   const index = state.index;
   const rotaAnterior = rotas[index - 1]?.name;
 
-  const { newCollectionPoint, origin } = route.params || {};
+  const { newCollectionPoint, origin, idPackage } = route.params || {}
 
   useEffect(() => {
     // Ajustar a câmera para mostrar origem e destino
@@ -141,11 +144,14 @@ export default function CollectionPointMapScreen() {
               else {
                 //cria oferta de coleta
                 // vai navegar  para outra aba, nao é a de historico e nao pode voltar para a tela de selecao de ponto de coleta
+                const offerService = new OfferService();
+                console.log(idPackage);
+                console.log(newCollectionPoint.address);
+                offerService.createOffer(idPackage, newCollectionPoint.address);
                 navigation.navigate('Home',
                   { 
                     screen: 'Histórico',
-                    params: { 
-                      offer: mockOffers.at(-1),
+                    params: {
                       collectionPoint: newCollectionPoint
                     }
                   } as never);

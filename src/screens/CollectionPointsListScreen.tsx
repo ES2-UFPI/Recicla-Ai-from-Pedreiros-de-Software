@@ -5,6 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MapPin, Search, Trash2, Navigation2 } from "lucide-react-native";
 import { CollectionPoint } from "@/types/collectionPoint";
 import { mockPoints } from "@/data";
+import { useRoute, RouteProp } from "@react-navigation/native";
 
 
 type RootStackParamList = {
@@ -12,10 +13,13 @@ type RootStackParamList = {
   CollectionPointMap: {
     newCollectionPoint?: CollectionPoint;
     origin?: { latitude: number; longitude: number } | null;
+    idPackage?: number;
   };
 };
 
 export default function CollectionPointsListScreen() {
+  const route = useRoute<RouteProp<any, any>>();
+  const idPackage = route.params?.idPackage;
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [searchText, setSearchText] = useState("");
   const [collectionPoints, setCollectionPoints] = useState<CollectionPoint[]>([]);
@@ -69,17 +73,18 @@ export default function CollectionPointsListScreen() {
     }
   };
 
-  const navigateToPoint = (point: CollectionPoint) => {
+  const navigateToPoint = (point: CollectionPoint, idPackage: number) => {
     navigation.navigate('CollectionPointMap', {
       newCollectionPoint: point,
-      origin: null, // ou passar a localização atual se disponível
+      origin: null,
+      idPackage: idPackage, // ou passar a localização atual se disponível
     });
   };
 
   const renderCollectionPoint = ({ item }: { item: CollectionPoint }) => (
     <TouchableOpacity
       style={styles.pointCard}
-      onPress={() => navigateToPoint(item)}
+      onPress={() => navigateToPoint(item, idPackage)}
       activeOpacity={0.7}
     >
       <View style={styles.pointIconContainer}>

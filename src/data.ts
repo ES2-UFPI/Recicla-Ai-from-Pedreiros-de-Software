@@ -20,12 +20,11 @@ export const mockInventory: InventoryItem[] = [
     item_id: 1,
     quantity: 15,
     available_quantity: 15,
-    total_weight: 7.5,
     created_at: new Date().toISOString(),
     excluded: 0,
     item: {
       id: 1,
-      nome: 'Garrafa PET',
+      name: 'Garrafa PET',
       value: 0.5,
       weight: 0.1,
       excluded: 0,
@@ -38,12 +37,11 @@ export const mockInventory: InventoryItem[] = [
     item_id: 2,
     quantity: 20,
     available_quantity: 20,
-    total_weight: 10,
     created_at: new Date().toISOString(),
     excluded: 0,
     item: {
       id: 2,
-      nome: 'Lata de Alumínio',
+      name: 'Lata de Alumínio',
       value: 1.0,
       weight: 0.2,
       excluded: 0,
@@ -56,12 +54,11 @@ export const mockInventory: InventoryItem[] = [
     item_id: 3,
     quantity: 8,
     available_quantity: 8,
-    total_weight: 16,
     created_at: new Date().toISOString(),
     excluded: 0,
     item: {
       id: 3,
-      nome: 'Papelão',
+      name: 'Papelão',
       value: 0.3,
       weight: 0.3,
       excluded: 0,
@@ -104,7 +101,7 @@ export const mockPoints: CollectionPoint[] = [
     distance: 5.8,
   },
 ];
-const USER = "PRODUCER";
+const USER = "COLLECTOR";
 
 // Initialize mockOffers from data.json if available. Dates in JSON are ISO strings;
 // convert them to Date objects for in-memory usage.

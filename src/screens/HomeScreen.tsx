@@ -21,6 +21,7 @@ export default function HomeScreen({ navigation }: any) {
             className="mt-8 flex-row items-center gap-3 rounded-lg bg-emerald-600 px-8 py-4 shadow-lg"
             onPress={() => {
               //navigation.navigate("Map")
+              navigation.navigate("SelectOffers");
             }}
           >
             <MapPin size={24} color="#ffffff" />

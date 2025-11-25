@@ -6,17 +6,16 @@ import { CollectionPoint } from '@/types/collectionPoint';
 import { History } from '@/types/history';
 
 export default function HistoryScreen({route}: any) {
-  const offer : Offer = route.params?.offer as Offer;
   const collectionPoint: CollectionPoint = route.params?.collectionPoint as CollectionPoint;
   const PROFILE = getUserRole();
-  if (offer && collectionPoint){
+  if (collectionPoint){
     addHistory(
       {
         id: 101,
-        date: offer.date.toISOString(),
+        date: new Date().toISOString(),
         receiver: null,
         collector: null,
-        producer: offer.creator,
+        producer: "Rodolfo",
         collectionPoint: collectionPoint.address
       } as History);
     }

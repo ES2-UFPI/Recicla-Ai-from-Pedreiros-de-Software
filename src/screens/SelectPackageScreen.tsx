@@ -5,6 +5,7 @@ import { InventoryItem } from '@/types/inventoryItem';
 import { mockInventory, mockPackages } from '@/data';
 import { PackageComponent } from '@/types/packageComponent';
 import PackagesComponent from '@/components/package';
+import { getUserItems } from '@/services/item-service';
 
 
 // DADOS MOCKADOS!!!
@@ -23,7 +24,17 @@ export default function SelectPackageScreen() {
   const loadInventory = async () => {
     try {
       setLoading(true);
-      setInventory(mockInventory);
+      const { data: userItems, error: itemsError } = await getUserItems(1);
+      if (itemsError) {
+        console.error('Erro ao carregar itens:', itemsError);
+        throw itemsError;
+      }
+      const inventoryData: InventoryItem[] = (userItems || []).map(userItem => ({
+        ...userItem,
+        item: userItem.item as any,
+        available_quantity: userItem.quantity,
+      }));
+      setInventory(inventoryData);
       setPackages(mockPackages);
     } catch (error) {
       console.error('Erro ao carregar inventário:', error);

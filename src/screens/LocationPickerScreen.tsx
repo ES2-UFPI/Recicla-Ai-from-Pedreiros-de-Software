@@ -27,7 +27,7 @@ export default function LocationPickerScreen() {
   const [origin, setOrigin] = useState<Coordinate | null>(null);
   const [searchText, setSearchText] = useState('');
   const [predictions, setPredictions] = useState<Prediction[]>([]);
-  const coords = route.params?.coords;
+  const {coords} = route.params ?? {};
 
   const API_KEY = GOOGLE_API_KEY;
   //const API_KEY = '1230918320098a0s9d';

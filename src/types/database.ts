@@ -1,4 +1,8 @@
 // Revisar as regras do update depois de pensar sobre as regras de negocio melhor
+//request_item: {
+//package_id: number,
+// request : {
+//package_id: number,
 
 export interface Database {
   public: {
@@ -194,12 +198,13 @@ export interface Database {
         excluded: number | null;
       };
       insert: {
+        user_id: number;
         excluded: number | null;
       };
       update: {
         excluded?: number | null;
       };
-    }
+    };
     package_items: {
       row: {
         id: number,
@@ -207,17 +212,43 @@ export interface Database {
         package_id: number,
         excluded: number,
         created_at: string
+        item_quantity: number,
       }
-      insert: { 
+      insert: {
         item_id: number,
         package_id: number,
         excluded: number,
+        item_quantity: number,
       }
       update: {
         item_id?: number,
+        item_quantity?: number,
         package_id?: number,
         excluded?: number,
       }
+    };
+    offers: {
+      row: {
+        id: number;
+        user_id: number;
+        package_id: number;
+        status: 'accepted' | 'pending';
+        created_at: string;
+        excluded: number | null;
+        address_collection_point: string | null;
+      };
+      insert: {
+        user_id: number;
+        package_id: number;
+        status: 'accepted' | 'pending';
+        excluded: number | null;
+        address_collection_point: string | null;
+      };
+      update: {
+        status?: 'accepted' | 'pending';
+        excluded?: number | null;
+        address_collection_point?: string | null;
+      };
     }
 
   };

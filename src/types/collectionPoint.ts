@@ -4,4 +4,5 @@ export interface CollectionPoint {
     longitude: number;
     address: string;
     createdAt: Date;
+    distance?: number; // distância em km da localização atual
 }

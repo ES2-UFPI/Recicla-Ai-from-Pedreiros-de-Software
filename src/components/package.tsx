@@ -1,9 +1,13 @@
-import { Minus, Plus, Trash2, Box } from "lucide-react-native";
+import { Minus, Plus, Trash2, Box, ArrowRight, Package } from "lucide-react-native";
 import { useState } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert, StyleSheet, Pressable} from "react-native";
 import { InventoryItem } from "@/types/inventoryItem";
 import { PackageComponent } from "@/types/packageComponent";
 import { InventoryItemComponent } from "@/types/inventoryItemComponent";
+import { useNavigation } from "@react-navigation/native";
+import { addOffer} from "@/data";
+import { PackageService } from "@/services/package-service";
+import { OfferService } from "@/services/offer-service";
 
 type PackagesComponentProps = {
   inventory: InventoryItem[];
@@ -13,8 +17,10 @@ type PackagesComponentProps = {
 };
 
 export default function PackagesComponent({ inventory, setInventory, packages, setPackages }: PackagesComponentProps) {
+  const navigation = useNavigation<any>();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectedQuantities, setSelectedQuantities] = useState<{ [key: number]: number }>({});
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   // ===== Funções de pacotes =====
   const toggleSelectItem = (itemId: number) => {
     setSelectedItems(prev =>
@@ -29,9 +35,12 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
     });
   };
 
-  const createPackage = () => {
+  const createPackage = async () => {
     if (selectedItems.length === 0) return;
-
+    const packageService = new PackageService();
+    const currentDate = new Date().toISOString();
+    const data = await packageService.createPackage(1, currentDate);
+    console.log(data);
     const packageName = `Pacote #${packages.length + 1}`;
     const newPackage = new PackageComponent(packageName);
     let hasError = false;
@@ -49,9 +58,11 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
         const partialItem: InventoryItem = {
           ...item,
           quantity: chosenQty,
-          total_weight: chosenQty * item.item.weight,
         };
         newPackage.add(new InventoryItemComponent(partialItem));
+        newPackage.setId(data["id"]);
+        console.log(data["id"]);
+        packageService.createPackageItem(1, item.id, 6, currentDate, chosenQty);
 
         return {
           ...item,
@@ -70,6 +81,16 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
     setPackages(prev => [...prev, newPackage]);
     setSelectedItems([]);
     setSelectedQuantities({});
+    addOffer({
+      creator: "Rodolfo",
+      date: new Date(),
+      status: 'pending',
+      package: newPackage,
+      collection_point: undefined
+    });
+
+    Alert.alert('Sucesso', 'Pacote criado com sucesso!');
+
   };
 
   const removePackage = (packageName: string) => {
@@ -113,27 +134,29 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
                 onPress={() => toggleSelectItem(item.id)}
                 className="flex-row justify-between items-center mb-2"
               >
-                <Text className="text-gray-800 font-medium">{item.item.nome}</Text>
+                <Text className="text-gray-800 font-medium">{item.item.name}</Text>
                 <Text className="text-gray-500 text-sm">{available} un disponíveis</Text>
               </TouchableOpacity>
 
               {selected && (
                 <View className="flex-row items-center justify-between bg-white rounded-lg p-2 border border-gray-200">
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => changeSelectedQuantity(item.id, -1, available)}
                     className="rounded-lg bg-red-500 p-2"
                     disabled={chosenQty <= 0}
+                    style={chosenQty <= 0 ? {opacity: 0.4} : {}}
                   >
                     <Minus size={18} color="#fff" />
-                  </TouchableOpacity>
+                  </Pressable>
                   <Text className="text-gray-700 font-semibold">{chosenQty}</Text>
-                  <TouchableOpacity
+                  <Pressable  
                     onPress={() => changeSelectedQuantity(item.id, 1, available)}
                     className="rounded-lg bg-emerald-600 p-2"
                     disabled={chosenQty >= available}
+                    style={chosenQty >= available ? {opacity: 0.5} : {}}
                   >
                     <Plus size={18} color="#fff" />
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               )}
             </View>
@@ -157,7 +180,7 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
         </View>
       ) : (
         packages.map(pkg => (
-          <View key={pkg.getName()} className="mb-3 rounded-lg bg-white p-4 shadow">
+          <Pressable key={pkg.getName()} className="mb-3 rounded-lg bg-white p-4 shadow" onPress={() => setSelectedPackage(pkg.getName())}>
             <View className="flex-row justify-between items-center mb-2">
               <Text className="text-lg font-bold text-gray-800">{pkg.getName()}</Text>
               <TouchableOpacity
@@ -169,10 +192,8 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
               </TouchableOpacity>
             </View>
             <Text className="text-gray-600 mb-2">
-              Peso Total: <Text className="font-semibold">{pkg.getWeight().toFixed(2)} kg</Text> | Valor Estimado:{' '}
               <Text className="font-semibold">R$ {pkg.getValue().toFixed(2)}</Text>
             </Text>
-
             {pkg.getChildren().map((child, idx) => {
               if (child instanceof InventoryItemComponent) {
                 return (
@@ -183,9 +204,30 @@ export default function PackagesComponent({ inventory, setInventory, packages, s
               }
               return null;
             })}
-          </View>
+            {selectedPackage === pkg.getName() && (
+              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Map", {idPackage: pkg.getId()})}>
+                <ArrowRight size={22} color="#22c55e" />
+              </TouchableOpacity>
+            )}
+          </Pressable>
         ))
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    marginTop: 10,
+    alignSelf: "flex-end",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: "#e6f9ed",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#22c55e",
+  },
+});

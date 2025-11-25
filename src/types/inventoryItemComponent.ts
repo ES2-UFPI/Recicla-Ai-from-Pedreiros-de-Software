@@ -6,15 +6,12 @@ export class InventoryItemComponent implements InventoryComponent {
     constructor(item: InventoryItem) {
         this.item = item;
     }
-    getWeight(): number {
-        return this.item.total_weight;
-    }
 
     getValue(): number {
         return this.item.quantity * this.item.item.value;
     }
 
     getName(): string {
-        return this.item.item.nome;
+        return this.item.item.name;
     }
 }

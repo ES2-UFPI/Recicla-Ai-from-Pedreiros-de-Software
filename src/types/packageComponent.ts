@@ -2,6 +2,7 @@ import { InventoryComponent } from './inventoryComponent';
 
 export class PackageComponent implements InventoryComponent {
   private name: string;
+  private id!: number;
   private children: InventoryComponent[] = [];
 
   constructor(name: string) {
@@ -13,10 +14,6 @@ export class PackageComponent implements InventoryComponent {
 
   remove(component: InventoryComponent) {
     this.children = this.children.filter(c => c !== component);
-  }
-
-  getWeight(): number {
-    return this.children.reduce((sum, c) => sum + c.getWeight(), 0);
   }
 
   getValue(): number {
@@ -31,5 +28,11 @@ export class PackageComponent implements InventoryComponent {
   }
   setChildren(children: InventoryComponent[]) {
     this.children = children;
+  }
+  setId(id: number) {
+    this.id = id;
+  }
+  getId(): number { 
+    return this.id;
   }
 }

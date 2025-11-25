@@ -3,25 +3,23 @@ import React, { useState, useEffect } from "react";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MapPin, Search, Trash2, Navigation2 } from "lucide-react-native";
+import { CollectionPoint } from "@/types/collectionPoint";
+import { mockPoints } from "@/data";
+import { useRoute, RouteProp } from "@react-navigation/native";
 
-interface CollectionPoint {
-  id: string;
-  latitude: number;
-  longitude: number;
-  address: string;
-  createdAt: Date;
-  distance?: number; // distância em km da localização atual
-}
 
 type RootStackParamList = {
   CollectionPointsList: undefined;
   CollectionPointMap: {
     newCollectionPoint?: CollectionPoint;
     origin?: { latitude: number; longitude: number } | null;
+    idPackage?: number;
   };
 };
 
 export default function CollectionPointsListScreen() {
+  const route = useRoute<RouteProp<any, any>>();
+  const idPackage = route.params?.idPackage;
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [searchText, setSearchText] = useState("");
   const [collectionPoints, setCollectionPoints] = useState<CollectionPoint[]>([]);
@@ -51,43 +49,10 @@ export default function CollectionPointsListScreen() {
       // setCollectionPoints(data);
 
       // Dados mockados para exemplo
-      const mockPoints: CollectionPoint[] = [
-        {
-          id: "1",
-          latitude: -5.0892,
-          longitude: -42.8019,
-          address: "Praça Pedro II, Centro, Teresina - PI",
-          createdAt: new Date("2025-01-15"),
-          distance: 2.5,
-        },
-        {
-          id: "2",
-          latitude: -5.0950,
-          longitude: -42.7890,
-          address: "Av. Frei Serafim, 2000, Centro, Teresina - PI",
-          createdAt: new Date("2025-01-20"),
-          distance: 3.2,
-        },
-        {
-          id: "3",
-          latitude: -5.0820,
-          longitude: -42.8100,
-          address: "Shopping Rio Poty, Av. Maranhão, Teresina - PI",
-          createdAt: new Date("2025-02-01"),
-          distance: 4.1,
-        },
-        {
-          id: "4",
-          latitude: -5.0750,
-          longitude: -42.7950,
-          address: "Parque da Cidadania, Teresina - PI",
-          createdAt: new Date("2025-02-10"),
-          distance: 5.8,
-        },
-      ];
+      const points = mockPoints;
 
-      setCollectionPoints(mockPoints);
-      setFilteredPoints(mockPoints);
+      setCollectionPoints(points);
+      setFilteredPoints(points);
     } catch (error) {
       console.error("Erro ao carregar pontos de coleta:", error);
     }
@@ -108,17 +73,18 @@ export default function CollectionPointsListScreen() {
     }
   };
 
-  const navigateToPoint = (point: CollectionPoint) => {
+  const navigateToPoint = (point: CollectionPoint, idPackage: number) => {
     navigation.navigate('CollectionPointMap', {
       newCollectionPoint: point,
-      origin: null, // ou passar a localização atual se disponível
+      origin: null,
+      idPackage: idPackage, // ou passar a localização atual se disponível
     });
   };
 
   const renderCollectionPoint = ({ item }: { item: CollectionPoint }) => (
     <TouchableOpacity
       style={styles.pointCard}
-      onPress={() => navigateToPoint(item)}
+      onPress={() => navigateToPoint(item, idPackage)}
       activeOpacity={0.7}
     >
       <View style={styles.pointIconContainer}>

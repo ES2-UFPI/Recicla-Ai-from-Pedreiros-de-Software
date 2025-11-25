@@ -4,16 +4,16 @@ import { Plus, Search } from "lucide-react-native";
 
 
 //receber a prop que eu passei na tela do mapa
-export default function Dashboard({ coords }: any) {
+export default function Dashboard({ coords, idPackage }: any) {
     const navigation = useNavigation<any>();
     //por enquanto so esses emojis como botoes
     return (
         <View style={styles.dashboard}>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('LocationPicker', { coords })}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('LocationPicker', { coords})}>
                 <Text style={styles.text}><Plus /></Text>
             </TouchableOpacity>
             {/* Passar localização atual */}
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CollectionPointsList')}> 
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CollectionPointsList', {idPackage})}> 
                 <Text style={styles.text}><Search /></Text>
             </TouchableOpacity>
         </View>
